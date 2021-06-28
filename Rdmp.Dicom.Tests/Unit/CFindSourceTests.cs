@@ -20,8 +20,8 @@ namespace Rdmp.Dicom.Tests.Unit
 
             var cmd = new ExecuteCommandCFind(
                 new ConsoleInputManager(RepositoryLocator, new ThrowImmediatelyCheckNotifier()) { DisallowInput = true },
-                "2010-01-01",
-                "2020-01-01",
+                "2013-01-01",
+                "2014-01-01",
                 "www.dicomserver.co.uk",
                 104,
                 "you",
@@ -30,7 +30,7 @@ namespace Rdmp.Dicom.Tests.Unit
             cmd.Execute();
 
             // file name is miday on 2010 1st January
-            var f = Path.Combine(dir.FullName, @"out/Data/Cache/ALL/20100101120000.csv");
+            var f = Path.Combine(dir.FullName, @"out/Data/Cache/ALL/20130101120000.csv");
             FileAssert.Exists(f);
             
             var result = File.ReadAllLines(f);

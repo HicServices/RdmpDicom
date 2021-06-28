@@ -132,7 +132,13 @@ namespace Rdmp.Dicom.Cache.Pipeline
             request.Dataset.AddOrUpdate(DicomTag.ModalitiesInStudy, modalityToQuery);
             var studyDateRange = new DicomDateRange(dateFrom, dateTo);
             request.Dataset.AddOrUpdate(DicomTag.StudyDate, studyDateRange);
-            request.Dataset.AddOrUpdate(DicomTag.StudyTime, studyDateRange);
+
+            // Problem: time and date are orthogonal in DICOM, so '9:00 1/1/20 to 10:00 31/1/20' can
+            // skip data from e.g. 15:00 2/2/20 because it isn't '9:00-10:00'.
+            // To avoid this, ignore time values unless we're doing less than a whole day:
+            if ((dateTo - dateFrom).Days == 0)
+                request.Dataset.AddOrUpdate(DicomTag.StudyTime, studyDateRange);
+
             return request;
         }
         #endregion
